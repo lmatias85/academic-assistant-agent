@@ -6,3 +6,6 @@ networkx
 pydantic
 python-dotenv
 mcp
+black
+flake8
+mypy
