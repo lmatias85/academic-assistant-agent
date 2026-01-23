@@ -1,0 +1,8 @@
+langchain
+langgraph
+openai
+faiss-cpu
+networkx
+pydantic
+python-dotenv
+mcp
