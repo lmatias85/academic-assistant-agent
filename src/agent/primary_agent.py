@@ -2,7 +2,7 @@ import json
 
 from openai import OpenAI
 from pydantic import ValidationError
-from src.agent.types import AgentDecision, Route, LLMDecision
+from src.agent.types import AgentDecision, LLMDecision
 from src.agent.prompts import SYSTEM_PROMPT
 
 
@@ -18,7 +18,7 @@ class PrimaryAgent:
         self.client = OpenAI()
 
     def decide(self, user_input: str) -> AgentDecision:
-        
+
         response = self.client.chat.completions.create(
             model="gpt-4.1-mini",
             messages=[
@@ -31,9 +31,7 @@ class PrimaryAgent:
         content = response.choices[0].message.content
 
         if content is None:
-            raise RuntimeError(
-                "LLM response content is None; cannot parse decision."
-            )
+            raise RuntimeError("LLM response content is None; cannot parse decision.")
 
         try:
             parsed = json.loads(content)
@@ -42,7 +40,6 @@ class PrimaryAgent:
             raise RuntimeError(
                 f"Failed to parse LLM decision output: {content}"
             ) from exc
-
 
         return AgentDecision(
             route=decision.route,
