@@ -1,4 +1,9 @@
-from src.agent.types import AgentDecision, Route
+import json
+
+from openai import OpenAI
+from pydantic import ValidationError
+from src.agent.types import AgentDecision, Route, LLMDecision
+from src.agent.prompts import SYSTEM_PROMPT
 
 
 class PrimaryAgent:
@@ -9,18 +14,37 @@ class PrimaryAgent:
     is informational or action-oriented.
     """
 
-    def decide(self, user_input: str) -> AgentDecision:
-        """
-        Decide which route should handle the user input.
+    def __init__(self) -> None:
+        self.client = OpenAI()
 
-        NOTE:
-        This is a stub implementation.
-        It will later be replaced by LLM-based reasoning.
-        """
-        # Temporary deterministic behavior (stub)
-        decision = AgentDecision(
-            route=Route.INFORMATIONAL,
-            reason="Stub decision: defaulting to informational route",
+    def decide(self, user_input: str) -> AgentDecision:
+        
+        response = self.client.chat.completions.create(
+            model="gpt-4.1-mini",
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": user_input},
+            ],
+            temperature=0,
         )
 
-        return decision
+        content = response.choices[0].message.content
+
+        if content is None:
+            raise RuntimeError(
+                "LLM response content is None; cannot parse decision."
+            )
+
+        try:
+            parsed = json.loads(content)
+            decision = LLMDecision(**parsed)
+        except (json.JSONDecodeError, ValidationError) as exc:
+            raise RuntimeError(
+                f"Failed to parse LLM decision output: {content}"
+            ) from exc
+
+
+        return AgentDecision(
+            route=decision.route,
+            reason=decision.reason,
+        )

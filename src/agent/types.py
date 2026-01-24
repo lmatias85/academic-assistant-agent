@@ -1,5 +1,6 @@
 from enum import Enum
 from dataclasses import dataclass
+from pydantic import BaseModel
 
 
 class Route(str, Enum):
@@ -9,5 +10,10 @@ class Route(str, Enum):
 
 @dataclass(frozen=True)
 class AgentDecision:
+    route: Route
+    reason: str
+
+
+class LLMDecision(BaseModel):
     route: Route
     reason: str
