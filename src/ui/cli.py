@@ -1,11 +1,12 @@
 from src.agent.primary_agent import PrimaryAgent
-from src.agent.types import Route
-from src.graph.informational_graph import build_informational_graph
+from src.strategies.dispatcher import StrategyDispatcher
 
 
 def start_cli() -> None:
+
     agent = PrimaryAgent()
-    informational_graph = build_informational_graph()
+    dispatcher = StrategyDispatcher()
+
     print("Academic System Assistant")
     print("-------------------------")
     print("Primary Agent initialized.")
@@ -18,24 +19,12 @@ def start_cli() -> None:
             print("Goodbye.")
             break
 
-        decision = agent.decide(user_input)
+        decision = agent.decide(user_input=user_input)
 
         print(f"[Decision] Route: {decision.route.value}")
         print(f"[Reason] {decision.reason}\n")
 
-        if decision.route == Route.INFORMATIONAL:
-            result = informational_graph.invoke(
-                {
-                    "user_input": user_input,
-                    "kg_context": None,
-                    "rag_context": None,
-                    "answer": None,
-                }
-            )
-            print("\n[Answer]")
-            print(result["answer"])
-        else:
-            print("\n[Action]")
-            print("Action handling via MCP Server (not implemented yet).")
+        strategy = dispatcher.dispatch(route=decision.route)
+        strategy.execute(user_input=user_input, decision=decision)
 
         print()
