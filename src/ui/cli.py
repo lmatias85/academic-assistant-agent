@@ -1,10 +1,16 @@
+from src.agent.primary_agent import PrimaryAgent
+from src.agent.types import Route
+
+
 def start_cli() -> None:
     """
-    Minimal CLI to validate environment and project setup.
+    Minimal CLI to validate Primary Agent integration.
     """
+    agent = PrimaryAgent()
+
     print("Academic System Assistant")
     print("-------------------------")
-    print("Environment loaded successfully.")
+    print("Primary Agent initialized.")
     print("Type 'exit' to quit.\n")
 
     while True:
@@ -14,4 +20,7 @@ def start_cli() -> None:
             print("Goodbye.")
             break
 
-        print(f"You said: {user_input}")
+        decision = agent.decide(user_input)
+
+        print(f"[Decision] Route: {decision.route.value}")
+        print(f"[Reason] {decision.reason}\n")
