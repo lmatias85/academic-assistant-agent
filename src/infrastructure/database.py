@@ -1,9 +1,13 @@
+import os
 import sqlite3
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 DB_PATH = Path("data/academic.db")
 SCHEMA_PATH = Path("data/schema.sql")
-SEED = Path("data/seed.sql")
+SEED_PATH = Path("data/seed.sql")
 
 
 def get_connection() -> sqlite3.Connection:
@@ -15,14 +19,21 @@ def get_connection() -> sqlite3.Connection:
 
 
 def init_db() -> None:
+    reset_on_start = os.getenv("DB_RESET_ON_START", "false").lower() == "true"
+
+    if reset_on_start and DB_PATH.exists():
+        DB_PATH.unlink()
+
     conn = get_connection()
-    cur = conn.cursor()
+
+    # Create schema
     schema = SCHEMA_PATH.read_text(encoding="utf-8")
     conn.executescript(schema)
-    cur.execute("SELECT COUNT(*) FROM student")
-    count = cur.fetchone()[0]
-    if count == 0:
-        seed = SEED.read_text(encoding="utf-8")
+
+    # Always seed in dev mode
+    if SEED_PATH.exists():
+        seed = SEED_PATH.read_text(encoding="utf-8")
         conn.executescript(seed)
+
     conn.commit()
     conn.close()
