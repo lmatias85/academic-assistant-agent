@@ -11,7 +11,7 @@ async def lifespan(app: FastAPI):
     # Startup
     init_db()
     yield
-    # Shutdown (si en el futuro necesitás limpiar recursos)
+    # Shutdown
 
 
 app = FastAPI(
