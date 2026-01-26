@@ -1,27 +1,21 @@
-import networkx as nx
+from src.kg.builders import build_prerequisite_graph
+from src.kg.db_reader import fetch_passed_subjects
 
 
-def get_passed_subjects(graph: nx.DiGraph, student_id: str) -> list[str]:
+def can_enroll(student_name: str, target_subject: str) -> dict:
     """
-    Return a list of subjects passed by the given student.
+    Evaluates if a student can enroll based on passed prerequisites.
     """
-    passed = []
+    passed = set(fetch_passed_subjects(student_name))
+    graph = build_prerequisite_graph()
 
-    for _, target, data in graph.out_edges(student_id, data=True):
-        if data.get("relation") == "PASSED":
-            passed.append(target)
+    required = set(graph.predecessors(target_subject))
 
-    return passed
+    missing = required - passed
 
-
-def get_prerequisites(graph: nx.DiGraph, subject_id: str) -> list[str]:
-    """
-    Return prerequisite subjects for a given subject.
-    """
-    prerequisites = []
-
-    for source, _, data in graph.in_edges(subject_id, data=True):
-        if data.get("relation") == "PREREQUISITE":
-            prerequisites.append(source)
-
-    return prerequisites
+    return {
+        "passed_subjects": sorted(passed),
+        "required_subjects": sorted(required),
+        "missing_prerequisites": sorted(missing),
+        "eligible": len(missing) == 0,
+    }
