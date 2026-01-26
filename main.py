@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from infraestructure.database import init_db
+from src.infrastructure.database import init_db
 
 # Load environment variables from .env
 load_dotenv()
