@@ -10,6 +10,7 @@ def main() -> None:
     Application entrypoint.
     """
     from src.ui.cli import start_cli
+
     init_db()
     start_cli()
 

@@ -1,7 +1,4 @@
-from contextlib import asynccontextmanager
 from fastapi import FastAPI
-
-from src.mcp.db import init_db
 from src.mcp.schemas import (
     EnrollStudentInput,
     EnrollStudentOutput,
@@ -10,19 +7,7 @@ from src.mcp.schemas import (
 )
 from src.mcp.tools import register_grade, enroll_student
 
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup
-    init_db()
-    yield
-    # Shutdown
-
-
-app = FastAPI(
-    title="Academic MCP Server",
-    lifespan=lifespan,
-)
+app = FastAPI(title="Academic MCP Server")
 
 
 @app.post("/tools/enroll_student", response_model=EnrollStudentOutput)
