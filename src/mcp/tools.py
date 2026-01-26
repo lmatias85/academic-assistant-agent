@@ -1,4 +1,4 @@
-from src.mcp.db import get_connection
+from src.infraestructure.database import get_connection
 from src.mcp.schemas import (
     EnrollStudentInput,
     EnrollStudentOutput,
