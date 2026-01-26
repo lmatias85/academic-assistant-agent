@@ -1,5 +1,3 @@
-from typing import Any
-
 from pydantic import ValidationError
 
 from src.agent.types import AgentDecision
