@@ -1,6 +1,8 @@
 from src.graph.state import InformationalState
 from src.kg import get_knowledge_graph
 from src.kg.queries import get_passed_subjects, get_prerequisites
+from src.rag import get_rules_vectorstore
+from src.rag.retriever import retrieve_rules_context
 
 
 def reasoning_node(state: InformationalState) -> InformationalState:
@@ -32,10 +34,14 @@ def kg_query_node(state: InformationalState) -> InformationalState:
 
 def rag_retrieval_node(state: InformationalState) -> InformationalState:
     """
-    Retrieve relevant academic rules using RAG.
-    Stub implementation.
+    Retrieve relevant academic rules using RAG (FAISS).
     """
-    state["rag_context"] = "RAG context: academic rules (stub)"
+    vectorstore = get_rules_vectorstore()
+
+    user_query = state["user_input"]
+    rules_context = retrieve_rules_context(vectorstore, user_query)
+
+    state["rag_context"] = rules_context
     return state
 
 
@@ -45,6 +51,8 @@ def synthesis_node(state: InformationalState) -> InformationalState:
     Stub implementation.
     """
     state["answer"] = (
-        f"Answer based on:\n" f"- {state['kg_context']}\n" f"- {state['rag_context']}"
+        "Based on structured data and academic rules:\n\n"
+        f"[Knowledge Graph]\n{state['kg_context']}\n\n"
+        f"[Academic Rules]\n{state['rag_context']}"
     )
     return state
