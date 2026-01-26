@@ -8,10 +8,11 @@ from src.agent.prompts import SYSTEM_PROMPT
 
 class PrimaryAgent:
     """
-    Primary decision agent.
+    Primary decision agent powered by an LLM.
 
-    Responsible only for deciding whether a user request
-    is informational or action-oriented.
+    Responsible for:
+    - deciding the route (informational vs action)
+    - extracting structured arguments for actions (when applicable)
     """
 
     def __init__(self) -> None:
@@ -35,13 +36,21 @@ class PrimaryAgent:
 
         try:
             parsed = json.loads(content)
-            decision = LLMDecision(**parsed)
+            llm_decision = LLMDecision(**parsed)
         except (json.JSONDecodeError, ValidationError) as exc:
             raise RuntimeError(
                 f"Failed to parse LLM decision output: {content}"
             ) from exc
 
+        # Propagate arguments only if present and validated
+        arguments = (
+            llm_decision.arguments.model_dump()
+            if llm_decision.arguments is not None
+            else None
+        )
+
         return AgentDecision(
-            route=decision.route,
-            reason=decision.reason,
+            route=llm_decision.route,
+            reason=llm_decision.reason,
+            arguments=arguments,
         )
