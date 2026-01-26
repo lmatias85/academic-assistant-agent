@@ -1,5 +1,96 @@
 from src.mcp.db import get_connection
-from src.mcp.schemas import EnrollStudentInput, EnrollStudentOutput
+from src.mcp.schemas import (
+    EnrollStudentInput,
+    EnrollStudentOutput,
+    RegisterGradeInput,
+    RegisterGradeOutput,
+)
+
+
+def register_grade(
+    input_data: RegisterGradeInput,
+) -> RegisterGradeOutput:
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # 1) Resolver student
+    cur.execute(
+        "SELECT student_id FROM student WHERE student_name = ?",
+        (input_data.student_name,),
+    )
+    student = cur.fetchone()
+    if student is None:
+        conn.close()
+        return RegisterGradeOutput(success=False, message="Student not found.")
+
+    # 2) Resolver subject
+    cur.execute(
+        "SELECT subject_id FROM subject WHERE subject_name = ?",
+        (input_data.subject_name,),
+    )
+    subject = cur.fetchone()
+    if subject is None:
+        conn.close()
+        return RegisterGradeOutput(success=False, message="Subject not found.")
+
+    # 3) Resolver course (subject + year)
+    cur.execute(
+        """
+        SELECT course_id
+        FROM course
+        WHERE subject_id = ? AND year = ?
+        """,
+        (subject["subject_id"], input_data.year),
+    )
+    course = cur.fetchone()
+    if course is None:
+        conn.close()
+        return RegisterGradeOutput(
+            success=False, message="Course not found for the given year."
+        )
+
+    # 4) Resolver enrollment
+    cur.execute(
+        """
+        SELECT enrollment_id
+        FROM enrollment
+        WHERE student_id = ? AND course_id = ?
+        """,
+        (student["student_id"], course["course_id"]),
+    )
+    enrollment = cur.fetchone()
+    if enrollment is None:
+        conn.close()
+        return RegisterGradeOutput(
+            success=False, message="Student is not enrolled in this course."
+        )
+
+    # 5) Determinar resultado
+    result = "PASSED" if input_data.score >= 4 else "FAILED"
+
+    # 6) Insertar grade (1 por enrollment)
+    try:
+        cur.execute(
+            """
+            INSERT INTO grade (enrollment_id, score, result)
+            VALUES (?, ?, ?)
+            """,
+            (enrollment["enrollment_id"], input_data.score, result),
+        )
+        conn.commit()
+    except Exception:
+        conn.close()
+        return RegisterGradeOutput(
+            success=False, message="Grade already registered for this enrollment."
+        )
+
+    conn.close()
+    return RegisterGradeOutput(
+        success=True,
+        message=f"Grade registered: {input_data.student_name} - "
+        f"{input_data.subject_name} ({input_data.year}) "
+        f"Score={input_data.score} Result={result}",
+    )
 
 
 def enroll_student(
