@@ -42,15 +42,12 @@ class PrimaryAgent:
                 f"Failed to parse LLM decision output: {content}"
             ) from exc
 
-        # Propagate arguments only if present and validated
-        arguments = (
-            llm_decision.arguments.model_dump()
-            if llm_decision.arguments is not None
-            else None
-        )
+        parsed = json.loads(content)
+        llm_decision = LLMDecision(**parsed)
 
         return AgentDecision(
             route=llm_decision.route,
             reason=llm_decision.reason,
-            arguments=arguments,
+            tool_name=llm_decision.tool_name,
+            arguments=llm_decision.arguments,
         )
