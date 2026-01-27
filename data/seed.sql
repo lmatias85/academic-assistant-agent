@@ -6,6 +6,7 @@ PRAGMA foreign_keys = ON;
 INSERT INTO student (student_name, academic_status)
 VALUES
   ('John Doe', 'REGULAR'),
+  ('John McClane', 'REGULAR'),
   ('Jane Smith', 'REGULAR'),
   ('Mark Brown', 'FREE');
 

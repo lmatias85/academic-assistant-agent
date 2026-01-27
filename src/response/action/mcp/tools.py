@@ -1,5 +1,5 @@
 from src.infrastructure.database import get_connection
-from src.mcp.schemas import (
+from src.response.action.mcp.schemas import (
     EnrollStudentInput,
     EnrollStudentOutput,
     RegisterGradeInput,

@@ -1,6 +1,6 @@
 import networkx as nx
 
-from src.kg.db_reader import fetch_prerequisites
+from src.response.informational.kg.db_reader import fetch_prerequisites
 
 
 def build_prerequisite_graph() -> nx.DiGraph:

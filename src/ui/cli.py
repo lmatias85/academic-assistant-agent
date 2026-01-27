@@ -1,10 +1,10 @@
-from src.agent.primary_agent import PrimaryAgent
-from src.strategies.dispatcher import StrategyDispatcher
+from src.response.agent.router import RouterAgent
+from src.response.strategies.dispatcher import StrategyDispatcher
 
 
 def start_cli() -> None:
 
-    agent = PrimaryAgent()
+    agent = RouterAgent()
     dispatcher = StrategyDispatcher()
 
     print("Academic System Assistant")

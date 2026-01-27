@@ -1,5 +1,5 @@
-from src.kg.builders import build_prerequisite_graph
-from src.kg.db_reader import fetch_passed_subjects
+from src.response.informational.kg.builders import build_prerequisite_graph
+from src.response.informational.kg.db_reader import fetch_passed_subjects
 
 
 def can_enroll(student_name: str, target_subject: str) -> dict:

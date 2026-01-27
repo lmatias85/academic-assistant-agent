@@ -10,7 +10,7 @@ class Route(str, Enum):
 
 
 @dataclass(frozen=True)
-class AgentDecision:
+class RouterDecision:
     route: Route
     reason: str
     tool_name: Optional[str] = None

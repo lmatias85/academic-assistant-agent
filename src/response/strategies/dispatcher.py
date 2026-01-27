@@ -1,7 +1,7 @@
-from src.agent.types import Route
-from src.strategies.informational import InformationalStrategy
-from src.strategies.action import ActionStrategy
-from src.strategies.base import RouteStrategy
+from src.response.agent.types import Route
+from src.response.strategies.informational import InformationalStrategy
+from src.response.strategies.action import ActionStrategy
+from src.response.strategies.base import RouteStrategy
 
 
 class StrategyDispatcher:

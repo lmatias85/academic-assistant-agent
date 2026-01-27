@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from src.mcp.schemas import (
+from src.response.action.mcp.schemas import (
     EnrollStudentInput,
     EnrollStudentOutput,
     RegisterGradeInput,
     RegisterGradeOutput,
 )
-from src.mcp.tools import register_grade, enroll_student
+from src.response.action.mcp.tools import register_grade, enroll_student
 
 app = FastAPI(title="Academic MCP Server")
 
