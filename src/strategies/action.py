@@ -1,35 +1,29 @@
-from pydantic import ValidationError
-
 from src.agent.types import AgentDecision
-from src.mcp.client import enroll_student_via_mcp
-from src.mcp.schemas import EnrollStudentInput
 from src.strategies.base import RouteStrategy
+from src.strategies.tool_registry import TOOL_REGISTRY
 
 
 class ActionStrategy(RouteStrategy):
-    """
-    Strategy responsible for handling action requests
-    via the MCP Server.
-    """
-
     def execute(self, user_input: str, decision: AgentDecision) -> None:
+        if decision.tool_name is None:
+            print("\n[Action Error] No tool specified.")
+            return
+
         if decision.arguments is None:
-            print("\n[Action Error]")
-            print(
-                "The action request is missing required arguments "
-                "and cannot be executed."
-            )
+            print("\n[Action Error] Missing arguments for action.")
+            return
+
+        handler = TOOL_REGISTRY.get(decision.tool_name)
+        if handler is None:
+            print(f"\n[Action Error] Unknown tool: {decision.tool_name}")
             return
 
         try:
-            input_data = EnrollStudentInput(**decision.arguments)
-        except ValidationError as exc:
+            message = handler(decision.arguments)
+        except Exception as exc:
             print("\n[Action Error]")
-            print("Invalid action arguments:")
-            print(exc)
+            print(str(exc))
             return
 
-        result = enroll_student_via_mcp(input_data)
-
         print("\n[Action Result]")
-        print(result.message)
+        print(message)
