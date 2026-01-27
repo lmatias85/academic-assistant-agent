@@ -1,6 +1,8 @@
-from src.agent.types import AgentDecision
-from src.graph.informational_graph import build_informational_graph
-from src.strategies.base import RouteStrategy
+from src.response.agent.types import RouterDecision
+from src.response.informational.pipeline.informational_graph import (
+    build_informational_graph,
+)
+from src.response.strategies.base import RouteStrategy
 
 
 class InformationalStrategy(RouteStrategy):
@@ -12,7 +14,7 @@ class InformationalStrategy(RouteStrategy):
     def __init__(self) -> None:
         self.graph = build_informational_graph()
 
-    def execute(self, user_input: str, decision: AgentDecision) -> None:
+    def execute(self, user_input: str, decision: RouterDecision) -> None:
         result = self.graph.invoke(
             {
                 "user_input": user_input,

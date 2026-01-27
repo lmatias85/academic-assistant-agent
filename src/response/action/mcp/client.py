@@ -1,7 +1,7 @@
 import requests
 
-from src.mcp.config import MCP_BASE_URL
-from src.mcp.schemas import (
+from src.response.action.config import MCP_BASE_URL
+from src.response.action.mcp.schemas import (
     EnrollStudentInput,
     EnrollStudentOutput,
     RegisterGradeInput,

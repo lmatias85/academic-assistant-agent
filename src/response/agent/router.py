@@ -2,11 +2,11 @@ import json
 
 from openai import OpenAI
 from pydantic import ValidationError
-from src.agent.types import AgentDecision, LLMDecision
-from src.agent.prompts import SYSTEM_PROMPT
+from src.response.agent.types import RouterDecision, LLMDecision
+from src.response.agent.prompts import SYSTEM_PROMPT
 
 
-class PrimaryAgent:
+class RouterAgent:
     """
     Primary decision agent powered by an LLM.
 
@@ -18,7 +18,7 @@ class PrimaryAgent:
     def __init__(self) -> None:
         self.client = OpenAI()
 
-    def decide(self, user_input: str) -> AgentDecision:
+    def decide(self, user_input: str) -> RouterDecision:
 
         response = self.client.chat.completions.create(
             model="gpt-4.1-mini",
@@ -45,7 +45,7 @@ class PrimaryAgent:
         parsed = json.loads(content)
         llm_decision = LLMDecision(**parsed)
 
-        return AgentDecision(
+        return RouterDecision(
             route=llm_decision.route,
             reason=llm_decision.reason,
             tool_name=llm_decision.tool_name,

@@ -1,7 +1,7 @@
 from langgraph.graph import StateGraph, END
 
-from src.graph.state import InformationalState
-from src.graph.nodes import (
+from src.response.informational.pipeline.state import InformationalState
+from src.response.informational.pipeline.nodes import (
     reasoning_node,
     kg_query_node,
     rag_retrieval_node,

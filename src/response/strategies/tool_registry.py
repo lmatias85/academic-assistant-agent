@@ -1,10 +1,10 @@
 from typing import Callable, Dict
 
-from src.mcp.client import (
+from src.response.action.mcp.client import (
     enroll_student_via_mcp,
     register_grade_via_mcp,
 )
-from src.mcp.schemas import (
+from src.response.action.mcp.schemas import (
     EnrollStudentInput,
     RegisterGradeInput,
 )

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from src.agent.types import AgentDecision
+from src.response.agent.types import RouterDecision
 
 
 class RouteStrategy(ABC):
@@ -8,5 +8,5 @@ class RouteStrategy(ABC):
     """
 
     @abstractmethod
-    def execute(self, user_input: str, decision: AgentDecision) -> None:
+    def execute(self, user_input: str, decision: RouterDecision) -> None:
         pass
