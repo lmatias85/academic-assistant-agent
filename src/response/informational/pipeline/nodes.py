@@ -1,5 +1,5 @@
 from src.response.informational.pipeline.state import InformationalState
-from src.response.informational.kg.queries import can_enroll
+from src.response.informational.kg.context import build_kg_context
 from src.response.informational.rag import get_rules_vectorstore
 from src.response.informational.rag.retriever import retrieve_rules_context
 
@@ -13,19 +13,16 @@ def reasoning_node(state: InformationalState) -> InformationalState:
 
 
 def kg_query_node(state: InformationalState) -> InformationalState:
-    # ⚠️ Versión inicial: valores fijos para demostrar
-    student_name = "John Doe"
-    target_subject = "Physics II"
+    student_name = str(state.get("student_name"))
+    subject_name = str(state.get("subject_name"))
 
-    result = can_enroll(student_name, target_subject)
-
-    state["kg_context"] = (
-        f"Student: {student_name}\n"
-        f"Passed subjects: {result['passed_subjects']}\n"
-        f"Required subjects: {result['required_subjects']}\n"
-        f"Missing prerequisites: {result['missing_prerequisites']}\n"
-        f"Eligible: {result['eligible']}"
-    )
+    if student_name and subject_name:
+        state["kg_context"] = build_kg_context(
+            student_name=student_name,
+            subject_name=subject_name,
+        )
+    else:
+        state["kg_context"] = None
 
     return state
 
@@ -44,13 +41,34 @@ def rag_retrieval_node(state: InformationalState) -> InformationalState:
 
 
 def synthesis_node(state: InformationalState) -> InformationalState:
-    """
-    Combine KG and RAG contexts into a final answer.
-    Stub implementation.
-    """
-    state["answer"] = (
-        "Based on structured data and academic rules:\n\n"
-        f"[Knowledge Graph]\n{state['kg_context']}\n\n"
-        f"[Academic Rules]\n{state['rag_context']}"
-    )
+    kg_context = state.get("kg_context")
+    rag_context = state.get("rag_context")
+
+    if kg_context is None:
+        state["answer"] = (
+            "I need more information to answer your question precisely. "
+            "Please specify the student and the subject you are referring to."
+        )
+        return state
+
+    enrollment_eval = kg_context["evaluations"]["enrollment_eligibility"]
+    student = kg_context["entities"]["student"]["name"]
+    subject = kg_context["entities"]["subject"]["name"]
+
+    if enrollment_eval["eligible"]:
+        conclusion = f"{student} is eligible to enroll in {subject}."
+    else:
+        reasons = "; ".join(enrollment_eval["reasons"])
+        conclusion = (
+            f"{student} is not eligible to enroll in {subject}. "
+            f"Reason(s): {reasons}."
+        )
+
+    if rag_context:
+        state["answer"] = (
+            f"{conclusion}\n\n" f"According to the academic rules:\n{rag_context}"
+        )
+    else:
+        state["answer"] = conclusion
+
     return state

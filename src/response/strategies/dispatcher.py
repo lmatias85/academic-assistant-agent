@@ -1,4 +1,4 @@
-from src.response.agent.types import Route
+from response.agent.types_agent import Route
 from src.response.strategies.informational import InformationalStrategy
 from src.response.strategies.action import ActionStrategy
 from src.response.strategies.base import RouteStrategy

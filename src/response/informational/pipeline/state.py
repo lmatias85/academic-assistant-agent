@@ -1,12 +1,9 @@
-from typing import TypedDict, Optional
+from typing import TypedDict
+from src.response.informational.kg.types_kg import KGContext
 
 
 class InformationalState(TypedDict):
     user_input: str
-
-    # Outputs of individual nodes
-    kg_context: Optional[str]
-    rag_context: Optional[str]
-
-    # Final answer
-    answer: Optional[str]
+    kg_context: KGContext | None
+    rag_context: str | None
+    answer: str | None

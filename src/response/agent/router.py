@@ -2,7 +2,7 @@ import json
 
 from openai import OpenAI
 from pydantic import ValidationError
-from src.response.agent.types import RouterDecision, LLMDecision
+from response.agent.types_agent import RouterDecision, LLMDecision
 from src.response.agent.prompts import SYSTEM_PROMPT
 
 
