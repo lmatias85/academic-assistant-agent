@@ -29,8 +29,6 @@ def extract_entities_node(
         temperature=0,
     )
 
-    print("[Entity Extraction] Raw LLM response:", response)
-
     parsed = json.loads(response)
     entities = InformationalEntities(**parsed)
 
