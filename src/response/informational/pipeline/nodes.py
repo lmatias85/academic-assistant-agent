@@ -37,17 +37,18 @@ def extract_entities_node(
 
 
 def kg_query_node(state: InformationalState) -> InformationalState:
+    
+    if state.get("answer") is not None:
+        return state
+    
     student_name = str(state.get("student_name"))
     subject_name = str(state.get("subject_name"))
 
-    if student_name and subject_name:
-        state["kg_context"] = build_kg_context(
-            student_name=student_name,
-            subject_name=subject_name,
-        )
-    else:
+    if not student_name or not subject_name:
         state["kg_context"] = None
+        return state
 
+    state["kg_context"] = build_kg_context(student_name, subject_name)
     return state
 
 
@@ -55,19 +56,27 @@ def rag_retrieval_node(state: InformationalState) -> InformationalState:
     """
     Retrieve relevant academic rules using RAG (FAISS).
     """
+    if state.get("answer") is not None:
+        return state
+    
     vectorstore = get_rules_vectorstore()
-
+    
     user_query = state["user_input"]
     rules_context = retrieve_rules_context(vectorstore, user_query)
-
+    
     state["rag_context"] = rules_context
+    
     return state
 
 
 def synthesis_node(state: InformationalState) -> InformationalState:
+    
+    if state.get("answer") is not None:
+        return state
+    
     kg_context = state.get("kg_context")
     rag_context = state.get("rag_context")
-
+    
     # --- Case 1: nothing useful ---
     if kg_context is None and not rag_context:
         state["answer"] = (
