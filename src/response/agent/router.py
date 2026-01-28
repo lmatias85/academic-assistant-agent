@@ -2,9 +2,9 @@ import json
 
 from pydantic import ValidationError
 
-from response.agent.llm_client import call_llm
-from response.agent.types_agent import RouterDecision, LLMDecision
-from response.agent.prompts import SYSTEM_PROMPT
+from src.response.agent.llm_client import call_llm
+from src.response.agent.types_agent import RouterDecision, LLMDecision
+from src.response.agent.prompts import SYSTEM_PROMPT
 
 
 class RouterAgent:
