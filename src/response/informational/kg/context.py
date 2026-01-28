@@ -9,10 +9,16 @@ from src.response.informational.kg.reasoning import evaluate_enrollment
 from src.response.informational.kg.types_kg import KGContext
 
 
-def build_kg_context(student_name: str, subject_name: str) -> KGContext:
+def build_kg_context(student_name: str, subject_name: str) -> KGContext | None:
     # --- entities ---
     student = get_student(student_name)
     subject = get_subject(subject_name)
+    if not student:
+        print(f"[KG] Student not found: {student_name}")
+    if not subject:
+        print(f"[KG] Subject not found: {subject_name}")
+    if not student or not subject:
+        return None
 
     # --- facts ---
     passed = set(get_passed_subjects(student_name))

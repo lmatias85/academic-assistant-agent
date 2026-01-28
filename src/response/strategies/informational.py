@@ -1,4 +1,5 @@
-from response.agent.types_agent import RouterDecision
+from src.response.agent.types_agent import RouterDecision
+from src.response.informational.pipeline.state import InformationalState
 from src.response.informational.pipeline.informational_graph import (
     build_informational_graph,
 )
@@ -15,14 +16,15 @@ class InformationalStrategy(RouteStrategy):
         self.graph = build_informational_graph()
 
     def execute(self, user_input: str, decision: RouterDecision) -> None:
-        result = self.graph.invoke(
-            {
-                "user_input": user_input,
-                "kg_context": None,
-                "rag_context": None,
-                "answer": None,
-            }
-        )
+        initial_state: InformationalState = {
+            "user_input": user_input,
+            "student_name": None,
+            "subject_name": None,
+            "kg_context": None,
+            "rag_context": None,
+            "answer": None,
+        }
+        result = self.graph.invoke(initial_state)
 
         print("\n[Answer]")
         print(result["answer"])

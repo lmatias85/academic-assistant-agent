@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from response.agent.types_agent import RouterDecision
+from src.response.agent.types_agent import RouterDecision
 
 
 class RouteStrategy(ABC):
