@@ -26,8 +26,6 @@ def extract_entities_node(
         temperature=0,
     )
 
-    print(f"response: {response}")
-
     parsed = json.loads(extract_json(response))
     entities = AcademicEntities(**parsed)
 
