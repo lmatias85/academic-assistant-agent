@@ -15,6 +15,26 @@ def reasoning_node(state: InformationalState) -> InformationalState:
     """
     return state
 
+def extract_entities_node(
+    state: InformationalState,
+) -> InformationalState:
+    user_input = state["user_input"]
+
+    response = call_llm(
+        system_prompt=INFORMATIONAL_ENTITY_PROMPT,
+        user_prompt=user_input,
+        temperature=0,
+    )
+
+    print("[Entity Extraction] Raw LLM response:", response)
+
+    parsed = json.loads(response)
+    entities = InformationalEntities(**parsed)
+
+    state["student_name"] = entities.student_name
+    state["subject_name"] = entities.subject_name
+
+    return state
 
 def kg_query_node(state: InformationalState) -> InformationalState:
     student_name = str(state.get("student_name"))
@@ -49,12 +69,15 @@ def synthesis_node(state: InformationalState) -> InformationalState:
     rag_context = state.get("rag_context")
 
     if kg_context is None:
-        state["answer"] = (
-            "I need more information to answer your question precisely. "
-            "Please specify the student and the subject you are referring to."
-        )
+        if rag_context:
+            state["answer"] = ("Here are the general requirements to enroll in a course:\n\n"
+            f"{rag_context}")
+        else:
+            state["answer"] = (
+                "I need more information to answer your question precisely. "
+            )
         return state
-
+        
     enrollment_eval = kg_context["evaluations"]["enrollment_eligibility"]
     student = kg_context["entities"]["student"]["name"]
     subject = kg_context["entities"]["subject"]["name"]
@@ -78,23 +101,4 @@ def synthesis_node(state: InformationalState) -> InformationalState:
     return state
 
 
-def extract_entities_node(
-    state: InformationalState,
-) -> InformationalState:
-    user_input = state["user_input"]
 
-    response = call_llm(
-        system_prompt=INFORMATIONAL_ENTITY_PROMPT,
-        user_prompt=user_input,
-        temperature=0,
-    )
-
-    print("[Entity Extraction] Raw LLM response:", response)
-
-    parsed = json.loads(response)
-    entities = InformationalEntities(**parsed)
-
-    state["student_name"] = entities.student_name
-    state["subject_name"] = entities.subject_name
-
-    return state
