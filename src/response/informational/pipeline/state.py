@@ -9,6 +9,7 @@ class InformationalState(TypedDict):
     # --- extracted entities ---
     student_name: Optional[str]
     subject_name: Optional[str]
+    course_name: Optional[str]
 
     # --- knowledge ---
     kg_context: Optional[KGContext]

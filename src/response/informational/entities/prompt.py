@@ -4,9 +4,9 @@ You extract entities related to an academic system from a user question.
 Detect and extract the following entities ONLY if they are clearly mentioned:
 
 Named entities:
-- student_name
-- professor_name
-- subject_name
+- student_name (person enrolled)
+- professor_name (person teaching)
+- subject_name (academic subject or course name)
 - course_name
 
 Concept mentions (true / false):

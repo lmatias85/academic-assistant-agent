@@ -20,6 +20,7 @@ class InformationalStrategy(RouteStrategy):
             "user_input": user_input,
             "student_name": None,
             "subject_name": None,
+            "course_name": None,
             "kg_context": None,
             "rag_context": None,
             "answer": None,

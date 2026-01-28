@@ -1,6 +1,8 @@
 import json
 from src.response.agent.llm_client import call_llm
+from src.response.agent.agent_utils import extract_json
 from src.response.informational.entities.types_entities import AcademicEntities
+from src.response.informational.entities.normalize import normalize_academic_entities
 from src.response.informational.entities.prompt import ACADEMIC_ENTITY_PROMPT
 from src.response.informational.kg.context import build_kg_context
 from src.response.informational.pipeline.state import InformationalState
@@ -24,11 +26,16 @@ def extract_entities_node(
         temperature=0,
     )
 
-    parsed = json.loads(response)
+    print(f"response: {response}")
+
+    parsed = json.loads(extract_json(response))
     entities = AcademicEntities(**parsed)
 
     state["student_name"] = entities.student_name
     state["subject_name"] = entities.subject_name
+    state["course_name"] = entities.course_name
+
+    normalize_academic_entities(state)
 
     if not entities.is_academic():
         state["answer"] = (
