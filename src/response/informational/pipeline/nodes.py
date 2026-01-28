@@ -75,7 +75,7 @@ def synthesis_node(state: InformationalState) -> InformationalState:
     else:
         state["answer"] = conclusion
 
-    return state    
+    return state
 
 
 def extract_entities_node(
