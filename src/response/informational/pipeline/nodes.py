@@ -1,7 +1,11 @@
+import json
 from src.response.informational.pipeline.state import InformationalState
 from src.response.informational.kg.context import build_kg_context
 from src.response.informational.rag import get_rules_vectorstore
 from src.response.informational.rag.retriever import retrieve_rules_context
+from src.response.informational.entities.types_entities import InformationalEntities
+from src.response.informational.entities.prompt import INFORMATIONAL_ENTITY_PROMPT
+from src.response.agent.llm_client import call_llm
 
 
 def reasoning_node(state: InformationalState) -> InformationalState:
@@ -70,5 +74,27 @@ def synthesis_node(state: InformationalState) -> InformationalState:
         )
     else:
         state["answer"] = conclusion
+
+    return state    
+
+
+def extract_entities_node(
+    state: InformationalState,
+) -> InformationalState:
+    user_input = state["user_input"]
+
+    response = call_llm(
+        system_prompt=INFORMATIONAL_ENTITY_PROMPT,
+        user_prompt=user_input,
+        temperature=0,
+    )
+
+    print("[Entity Extraction] Raw LLM response:", response)
+
+    parsed = json.loads(response)
+    entities = InformationalEntities(**parsed)
+
+    state["student_name"] = entities.student_name
+    state["subject_name"] = entities.subject_name
 
     return state

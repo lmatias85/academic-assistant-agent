@@ -1,6 +1,6 @@
 from src.response.entity.resolver import EntityResolver
 from src.response.entity.errors import EntityNotFoundError, EntityAmbiguousError
-from response.agent.types_agent import RouterDecision
+from src.response.agent.types_agent import RouterDecision
 from src.response.strategies.base import RouteStrategy
 from src.response.strategies.tool_registry import TOOL_REGISTRY
 
