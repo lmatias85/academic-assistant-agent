@@ -2,7 +2,6 @@ from langgraph.graph import StateGraph, END
 
 from src.response.informational.pipeline.state import InformationalState
 from src.response.informational.pipeline.nodes import (
-    reasoning_node,
     extract_entities_node,
     kg_query_node,
     rag_retrieval_node,
@@ -14,14 +13,12 @@ def build_informational_graph():
     graph = StateGraph(InformationalState)
 
     # --- Nodes ---
-    graph.add_node("reasoning", reasoning_node)
     graph.add_node("entity_extraction", extract_entities_node)
     graph.add_node("kg_query", kg_query_node)
     graph.add_node("rag_retrieval", rag_retrieval_node)
     graph.add_node("synthesis", synthesis_node)
 
     # --- Edges ---
-    graph.add_edge("reasoning", "entity_extraction")
     graph.add_edge("entity_extraction", "kg_query")
     graph.add_edge("kg_query", "rag_retrieval")
     graph.add_edge("rag_retrieval", "synthesis")

@@ -1,20 +1,26 @@
-INFORMATIONAL_ENTITY_PROMPT = """
-You extract structured entities from academic questions.
+ACADEMIC_ENTITY_PROMPT = """
+You extract entities related to an academic system from a user question.
 
-Extract the following fields if explicitly mentioned:
+Detect and extract the following entities ONLY if they are clearly mentioned:
+
+Named entities:
 - student_name
+- professor_name
 - subject_name
+- course_name
+
+Concept mentions (true / false):
+- mentions_enrollment
+- mentions_grade
+- mentions_prerequisite
 
 Rules:
-- Do NOT infer.
-- Do NOT guess.
-- Do NOT normalize.
-- If a field is not clearly present, return null.
+- Use the exact text as written by the user.
+- Do NOT infer or guess.
+- Do NOT normalize names.
+- If an entity is not present, return null (or false for booleans).
+- If the question does not refer to the academic domain,
+  return all fields as null / false.
 
-Return ONLY valid JSON matching this schema:
-
-{
-  "student_name": string | null,
-  "subject_name": string | null
-}
+Return ONLY valid JSON matching this schema.
 """

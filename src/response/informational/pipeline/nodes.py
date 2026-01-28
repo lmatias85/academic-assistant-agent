@@ -1,7 +1,7 @@
 import json
 from src.response.agent.llm_client import call_llm
-from src.response.informational.entities.types_entities import InformationalEntities
-from src.response.informational.entities.prompt import INFORMATIONAL_ENTITY_PROMPT
+from src.response.informational.entities.types_entities import AcademicEntities
+from src.response.informational.entities.prompt import ACADEMIC_ENTITY_PROMPT
 from src.response.informational.kg.context import build_kg_context
 from src.response.informational.pipeline.state import InformationalState
 from src.response.informational.pipeline.utlis import build_synthesis_input
@@ -10,30 +10,28 @@ from src.response.informational.rag import get_rules_vectorstore
 from src.response.informational.rag.retriever import retrieve_rules_context
 
 
-def reasoning_node(state: InformationalState) -> InformationalState:
-    """
-    Initial reasoning node.
-    For now, it simply passes the user input forward.
-    """
-    return state
-
-
 def extract_entities_node(
     state: InformationalState,
 ) -> InformationalState:
     user_input = state["user_input"]
 
     response = call_llm(
-        system_prompt=INFORMATIONAL_ENTITY_PROMPT,
+        system_prompt=ACADEMIC_ENTITY_PROMPT,
         user_prompt=user_input,
         temperature=0,
     )
 
     parsed = json.loads(response)
-    entities = InformationalEntities(**parsed)
+    entities = AcademicEntities(**parsed)
 
     state["student_name"] = entities.student_name
     state["subject_name"] = entities.subject_name
+
+    if not entities.is_academic():
+        state["answer"] = (
+            "This question does not appear to be related to the academic system."
+        )
+        return state
 
     return state
 
