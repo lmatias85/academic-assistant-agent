@@ -118,15 +118,10 @@ def enroll_student(
         missing_prereqs = cur.fetchall()
 
         if missing_prereqs:
-            missing_names = [
-                row["subject_name"] for row in missing_prereqs
-            ]
+            missing_names = [row["subject_name"] for row in missing_prereqs]
             return EnrollStudentOutput(
                 success=False,
-                message=(
-                    "Missing prerequisite subjects: "
-                    + ", ".join(missing_names)
-                ),
+                message=("Missing prerequisite subjects: " + ", ".join(missing_names)),
             )
 
         # 6. Insert enrollment
@@ -179,9 +174,7 @@ def register_grade(
         )
         student = cur.fetchone()
         if student is None:
-            return RegisterGradeOutput(
-                success=False, message="Student not found."
-            )
+            return RegisterGradeOutput(success=False, message="Student not found.")
 
         # 2) Resolve subject
         cur.execute(
@@ -190,9 +183,7 @@ def register_grade(
         )
         subject = cur.fetchone()
         if subject is None:
-            return RegisterGradeOutput(
-                success=False, message="Subject not found."
-            )
+            return RegisterGradeOutput(success=False, message="Subject not found.")
 
         # 3) Resolve course
         cur.execute(
