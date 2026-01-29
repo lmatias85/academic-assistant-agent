@@ -1,4 +1,4 @@
-- Can John Doe enroll in Physics II?			
+- Can John Doe enroll in Physics II?
 - Enroll John Doe in Physics II for year 2025		
 - Enroll John	
 - Enroll John in Physics II for year 2025					
