@@ -9,7 +9,6 @@ def start_cli() -> None:
 
     print("Academic System Assistant")
     print("-------------------------")
-    print("Primary Agent initialized.")
     print("Type 'exit' to quit.\n")
 
     while True:

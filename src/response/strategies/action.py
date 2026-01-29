@@ -49,7 +49,6 @@ class ActionStrategy(RouteStrategy):
 
     def _resolve_entities(self, tool_name: str, args: dict) -> dict:
         resolved = dict(args)
-        print(f"""resolve student: {args["student_name"]}""")
         if "student_name" in args:
             student = self.resolver.resolve_student(args["student_name"])
             resolved["student_name"] = student["student_name"]

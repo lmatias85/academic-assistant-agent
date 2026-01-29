@@ -1,8 +1,8 @@
 - Can John Doe enroll in Physics II?
-- Enroll John Doe in Physics II for year 2025		
-- Enroll John	
-- Enroll John in Physics II for year 2025					
-- Who won the World Cup?					
+- Enroll John Doe in Physics II for year 2025
+- Enroll John
+- Enroll John in Physics II for year 2025
+- Who won the World Cup?
 - Can John Doe enroll in Physics II?
 - Can John Doe enroll in course Physics II?
 - Can John Doe enroll in Math I?
@@ -30,6 +30,6 @@
 - Can John enroll tomorrow?
 - Can John Doe enroll in Physics II?
 - Register grade 7 in Physics I for John Doe for 2025
-- Enroll John Doe in Physics I for year 2025	
+- Enroll John Doe in Physics I for year 2025
 - Register grade 7 in Physics I for John Doe for 2025
 - Can John Doe enroll in Physics II?
