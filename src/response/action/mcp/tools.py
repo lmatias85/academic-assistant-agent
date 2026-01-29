@@ -126,11 +126,12 @@ def enroll_student(
         # 6. Insert enrollment
         cur.execute(
             """
-            INSERT INTO enrollment (student_id, course_id, status)
-            VALUES (?, ?, 'ENROLLED')
+            INSERT INTO enrollment (student_id, course_id, enrollment_date)
+            VALUES (?, ?, DATE('now'))
             """,
             (student_id, course_id),
         )
+
         conn.commit()
 
         return EnrollStudentOutput(
@@ -229,20 +230,10 @@ def register_grade(
         # 7) Insert grade
         cur.execute(
             """
-            INSERT INTO grade (enrollment_id, score, result)
-            VALUES (?, ?, ?)
+            INSERT INTO grade (enrollment_id, score, result, created_at)
+            VALUES (?, ?, ?, DATE('now'))
             """,
             (enrollment["enrollment_id"], input_data.score, result),
-        )
-
-        # 8) Update enrollment result
-        cur.execute(
-            """
-            UPDATE enrollment
-            SET result = ?
-            WHERE enrollment_id = ?
-            """,
-            (result, enrollment["enrollment_id"]),
         )
 
         conn.commit()
