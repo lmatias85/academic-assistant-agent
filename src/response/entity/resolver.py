@@ -71,9 +71,7 @@ class EntityResolver:
             rows = cur.fetchall()
 
             if not rows:
-                raise EntityNotFoundError(
-                    f"{table} not found for value '{raw_value}'."
-                )
+                raise EntityNotFoundError(f"{table} not found for value '{raw_value}'.")
 
             if len(rows) > 1:
                 raise EntityAmbiguousError(
