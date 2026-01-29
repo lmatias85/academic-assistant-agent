@@ -100,17 +100,16 @@ def enroll_student(
             """
             SELECT p.required_subject_id, s.subject_name
             FROM prerequisite p
-            JOIN subject s
-              ON s.subject_id = p.required_subject_id
+            JOIN subject s ON s.subject_id = p.required_subject_id
             WHERE p.subject_id = ?
-              AND p.required_subject_id NOT IN (
-                  SELECT c.subject_id
-                  FROM enrollment e
-                  JOIN course c
-                    ON c.course_id = e.course_id
-                  WHERE e.student_id = ?
-                    AND e.result = 'PASSED'
-              )
+            AND p.required_subject_id NOT IN (
+                SELECT c.subject_id
+                FROM enrollment e
+                JOIN course c ON c.course_id = e.course_id
+                JOIN grade g ON g.enrollment_id = e.enrollment_id
+                WHERE e.student_id = ?
+                    AND g.result = 'PASSED'
+            )
             """,
             (subject_id, student_id),
         )
