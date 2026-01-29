@@ -218,7 +218,17 @@ def register_grade(
             )
 
         # 5) Prevent re-grading approved enrollments
-        if enrollment["result"] == "PASSED":
+        cur.execute(
+            """
+            SELECT 1
+            FROM grade
+            WHERE enrollment_id = ?
+            AND result = 'PASSED'
+            """,
+            (enrollment["enrollment_id"],),
+        )
+
+        if cur.fetchone():
             return RegisterGradeOutput(
                 success=False,
                 message="Grade already finalized as PASSED.",
