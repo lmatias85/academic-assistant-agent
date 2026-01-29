@@ -33,7 +33,36 @@ class EntityResolver:
         conn = get_connection()
         cur = conn.cursor()
 
-        # Simple fuzzy match (LIKE)
+        # Fuzzy match (=)
+        cur.execute(
+            f"""
+            SELECT {id_field}, {name_field}
+            FROM {table}
+            WHERE {name_field} = ?
+            """,
+            (f"%{raw_value}%",),
+        )
+
+        rows = cur.fetchall()
+        conn.close()
+
+        if not rows:
+            raise EntityNotFoundError(f"{table} not found for value '{raw_value}'.")
+        
+        if len(rows) > 1:
+            raise EntityAmbiguousError(
+                entity_type=table,
+                candidates=[r[name_field] for r in rows],
+            )
+
+        if len(rows) == 1:
+            return {
+                id_field: rows[0][id_field],
+                name_field: rows[0][name_field],
+            }
+
+
+        # Fuzzy match (LIKE)
         cur.execute(
             f"""
             SELECT {id_field}, {name_field}
