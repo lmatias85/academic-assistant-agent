@@ -204,7 +204,7 @@ def register_grade(
         # 4) Resolve enrollment
         cur.execute(
             """
-            SELECT enrollment_id, result
+            SELECT enrollment_id
             FROM enrollment
             WHERE student_id = ? AND course_id = ?
             """,
