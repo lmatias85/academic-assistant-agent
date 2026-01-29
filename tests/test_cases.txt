@@ -1,0 +1,35 @@
+- Can John Doe enroll in Physics II?
+- Enroll John Doe in Physics II for year 2025		
+- Enroll John	
+- Enroll John in Physics II for year 2025					
+- Who won the World Cup?					
+- Can John Doe enroll in Physics II?
+- Can John Doe enroll in course Physics II?
+- Can John Doe enroll in Math I?
+- Can John enroll in Math I?
+- Can John Doe enroll in Physics II?
+- Can Jane Smith enroll in Physics I?
+- What are the requirements to enroll in a course?
+- What are prerequisites?
+- Who is the professor of Physics II?
+- What are the enrollments of John Doe?
+- What grades does John Doe have?
+- Enroll John Doe in Math I for year 2025
+- Enroll John Doe in Physics II for year 2025
+- Enroll Jane Smith in Math I for year 2025
+- Enroll John Doe in Physics II for year 2030
+- Enroll John Doe in Math I for year 2025
+- Enroll John McClane in Math I for 2025
+- Register grade 8 for John Doe in Math I for year 2025
+- Register grade 15 for John Doe in Math I for year 2025
+- Register grade 6 for John Doe in Physics II for year 2025
+- Register grade 9 for John Doe in Math I for year 2025
+- Register grade 10 for John McClane in Math I for year 2025
+- clear
+- asdf qwerty
+- Can John enroll tomorrow?
+- Can John Doe enroll in Physics II?
+- Register grade 7 in Physics I for John Doe for 2025
+- Enroll John Doe in Physics I for year 2025	
+- Register grade 7 in Physics I for John Doe for 2025
+- Can John Doe enroll in Physics II?
