@@ -150,8 +150,8 @@ Create a `.env` file:
 
 ```
 OPENAI_API_KEY=your_key_here
-DB_PATH=path_to_sqlite_db
-RULES_PATH=path_to_academic_rules.md
+DB_RESET_ON_START=true
+
 ```
 
 ### 3. Start the MCP API server
