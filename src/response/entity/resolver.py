@@ -33,29 +33,56 @@ class EntityResolver:
         conn = get_connection()
         cur = conn.cursor()
 
-        # Simple fuzzy match (LIKE)
-        cur.execute(
-            f"""
-            SELECT {id_field}, {name_field}
-            FROM {table}
-            WHERE {name_field} LIKE ?
-            """,
-            (f"%{raw_value}%",),
-        )
-
-        rows = cur.fetchall()
-        conn.close()
-
-        if not rows:
-            raise EntityNotFoundError(f"{table} not found for value '{raw_value}'.")
-
-        if len(rows) > 1:
-            raise EntityAmbiguousError(
-                entity_type=table,
-                candidates=[r[name_field] for r in rows],
+        try:
+            # 1) Exact match (case-insensitive)
+            cur.execute(
+                f"""
+                SELECT {id_field}, {name_field}
+                FROM {table}
+                WHERE LOWER({name_field}) = LOWER(?)
+                """,
+                (raw_value,),
             )
 
-        return {
-            id_field: rows[0][id_field],
-            name_field: rows[0][name_field],
-        }
+            rows = cur.fetchall()
+
+            if len(rows) == 1:
+                return {
+                    id_field: rows[0][id_field],
+                    name_field: rows[0][name_field],
+                }
+
+            if len(rows) > 1:
+                raise EntityAmbiguousError(
+                    entity_type=table,
+                    candidates=[r[name_field] for r in rows],
+                )
+
+            # 2) Fuzzy match (LIKE)
+            cur.execute(
+                f"""
+                SELECT {id_field}, {name_field}
+                FROM {table}
+                WHERE {name_field} LIKE ?
+                """,
+                (f"%{raw_value}%",),
+            )
+
+            rows = cur.fetchall()
+
+            if not rows:
+                raise EntityNotFoundError(f"{table} not found for value '{raw_value}'.")
+
+            if len(rows) > 1:
+                raise EntityAmbiguousError(
+                    entity_type=table,
+                    candidates=[r[name_field] for r in rows],
+                )
+
+            return {
+                id_field: rows[0][id_field],
+                name_field: rows[0][name_field],
+            }
+
+        finally:
+            conn.close()
