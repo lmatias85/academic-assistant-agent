@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DB_PATH = Path("data/academic.db")
-SCHEMA_PATH = Path("data/schema.sql")
-SEED_PATH = Path("data/seed.sql")
+SCHEMA_PATH = Path("data/sql/schema.sql")
+SEED_PATH = Path("data/sql/seed.sql")
 
 
 def get_connection() -> sqlite3.Connection:
