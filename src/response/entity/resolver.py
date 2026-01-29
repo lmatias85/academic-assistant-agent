@@ -48,7 +48,7 @@ class EntityResolver:
 
         if not rows:
             raise EntityNotFoundError(f"{table} not found for value '{raw_value}'.")
-        
+
         if len(rows) > 1:
             raise EntityAmbiguousError(
                 entity_type=table,
@@ -60,7 +60,6 @@ class EntityResolver:
                 id_field: rows[0][id_field],
                 name_field: rows[0][name_field],
             }
-
 
         # Fuzzy match (LIKE)
         cur.execute(
